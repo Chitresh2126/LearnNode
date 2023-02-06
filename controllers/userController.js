@@ -5,34 +5,7 @@ const mongoose = require("mongoose");
 
 const saltRounds = 10;
 
-const getUser = async (req, res) => {
-    try {
-      console.log(req.id);
-      const id = mongoose.Types.ObjectId(req.id);
-      let users = await userSchema.findOne(id).select("-password");
-      res.json({
-        message: "One the user",
-        users,
-      });
-    } catch (err) {
-      res.json({
-        message: err.message,
-      });
-    }
-  };
-  const getUsers = async (req, res) => {
-    try {
-      let users = await userSchema.find().select("-password");
-      res.json({
-        message: "all the users",
-        users,
-      });
-    } catch (err) {
-      res.json({
-        message: err.message,
-      });
-    }
-  };
+
   const createUsers = async (req, res) => {
     try {
       const { email, firstName, lastName, age, gender, password } = req.body;
@@ -76,6 +49,7 @@ const getUser = async (req, res) => {
       user.lastName = lastName ? lastName : user.lastName;
       user.age = age ? age : user.age;
       user.gender = gender ? gender : user.gender;
+      await user.save();
       res.json({
         message: "update User",
         user,
@@ -89,7 +63,5 @@ const getUser = async (req, res) => {
 
   module.exports = {
     updateUsers,
-    createUsers,
-    getUser,
-    getUsers,
+    createUsers
   };
